@@ -1,23 +1,65 @@
-$packages = ['python-setuptools', 'python-dev', 'build-essential', 'python-pip']
-$pypackages = ['livereload', 'formic']
-
-$packages.each |String $package| {
-  package {"${package}":
-    ensure => installed,
-    provider => apt,
-    name => "${package}"
-  }
+package {"python-setuptools":
+  ensure => installed,
+  provider => apt,
+  name => "python-setuptools",
+  notify => [
+    Package['python-pip']
+  ]
 }
 
-$pypackages.each |String $pypackage| {
-  package {"${pypackage}":
-    ensure => installed,
-    provider => pip,
-    name => "${pypackage}"
-  }
+package {"python-dev":
+  ensure => installed,
+  provider => apt,
+  name => "python-dev",
+  notify => [
+    Package['python-pip']
+  ]
 }
 
-service { 'apache2':
-ensure => running,
-   enable => false
+package {"build-essential":
+  ensure => installed,
+  provider => apt,
+  name => "build-essential",
+  notify => [
+    Package['python-pip']
+  ]
+}
+
+package {"python-pip":
+  ensure => installed,
+  provider => apt,
+  name => "python-pip",
+  require => [
+    Package['python-setuptools'],
+    Package['python-dev'],
+    Package['build-essential']
+  ],
+  notify => [
+    Package['livereload'],
+    Package['formic']
+  ]
+}
+
+package {"livereload":
+  ensure => installed,
+  provider => pip,
+  name => "livereload",
+  require => [
+    Package['python-pip']
+  ]
+}
+
+package {"formic":
+  ensure => installed,
+  provider => pip,
+  name => "formic",
+  require => [
+    Package['python-pip']
+  ]
+}
+
+service { 'apache2'
+  name => 'apache2',
+  ensure => running,
+  enable => true
 }
