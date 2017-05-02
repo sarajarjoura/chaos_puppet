@@ -1,0 +1,8 @@
+# tasks file for http and api based flags
+
+- shell: echo "api {{ item }}"
+  register: out
+  with_items: hash
+
+- debug:
+    var: hashes

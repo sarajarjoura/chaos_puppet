@@ -1,0 +1,12 @@
+---
+# tasks file for gamedayalpha
+- hosts: all
+  vars_files:
+    - ../vars/main.yml
+  gather_facts: no
+  tasks:
+  - name: Include a file
+    include: seeders/api.yml
+    static: yes
+
+# run seeder
