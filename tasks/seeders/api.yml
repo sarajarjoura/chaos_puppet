@@ -6,3 +6,13 @@
 
 - debug:
     var: hashes
+
+- lineinfile:
+    path: /etc/nginx/conf.d/example-17.conf
+    regexp: '^    add_header  '
+    line: "    add_header  X-Upstream  {{ hashes[0] }};"
+    insertafter: 'location / {'
+
+- service:
+    name: nginx
+    state: restarted

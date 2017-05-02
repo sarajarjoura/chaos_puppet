@@ -1,8 +1,13 @@
 ---
 # tasks file for gamedayalpha
-- hosts: all
+- hosts: bal
+  become: true
+  become_user: root
   vars_files:
     - ../vars/main.yml
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted
   gather_facts: no
   tasks:
   - name: Include a file
